@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"html/template"
 	"log"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/google/go-github/v32/github"
+	"github.com/russross/blackfriday/v2"
 	"golang.org/x/oauth2"
 )
 
@@ -91,6 +94,19 @@ func (l *cachedIssueList) Votes(issue int) int {
 func (l *cachedIssueList) UserHasVoted(issue int, user string) bool {
 	_, ok := l.userVoteID(issue, user)
 	return ok
+}
+
+// RenderBody returns the issue body as safe HTML
+func (l *cachedIssueList) RenderBody(issue *github.Issue) template.HTML {
+	// We only render the first paragraph, hoping that it's a succint summary of the issue in question.
+	body := strings.ReplaceAll(issue.GetBody(), "\r\n", "\n")
+	parts := strings.SplitN(body, "\n\n", 2)
+	params := blackfriday.HTMLRendererParameters{
+		HeadingLevelOffset: 4,
+		Flags:              blackfriday.CommonHTMLFlags | blackfriday.SkipImages | blackfriday.NofollowLinks,
+	}
+	html := blackfriday.Run([]byte(parts[0]), blackfriday.WithExtensions(blackfriday.CommonExtensions), blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(params)))
+	return template.HTML(html)
 }
 
 // userVoteID returns the ID of the vote the user has cast on this issue, if

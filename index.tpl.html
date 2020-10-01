@@ -21,7 +21,7 @@
 
             {{range .Issues}}
             <div class="row">
-                <div class="col-2 col-md-1 text-right">
+                <div class="col-2 col-md-1 text-right"><h4>
                     {{if $.Authenticated}}
                         {{if $.UserHasVoted .GetNumber $.User}}
                             <a href="/unvote/{{.Number}}">{{$.Votes .Number}}&nbsp;<span class="text-success">&#x25B2;</span></a>
@@ -31,12 +31,13 @@
                     {{else}}
                         {{$.Votes .Number}}&nbsp;<span class="very-muted">&#x25B2;</span>
                     {{end}}
-                </div>
-                <div class="col-2 col-md-1 text-right">
+                </h4></div>
+                <div class="col-2 col-md-1 text-right"><h4>
                     <a href="{{.HTMLURL}}"><span class="issue-number text-muted">#{{.Number}}</span></a>
-                </div>
+                </h4></div>
                 <div class="col">
-                    <span class="title">{{.Title}}</span>
+                    <h4>{{.Title}}</h4>
+                    {{$.RenderBody .}}
                 </div>
             </div>
             {{end}}

@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -39,7 +40,15 @@ func main() {
 	githubRepo := kingpin.Flag("github-repo", "GitHub repository").Envar("GITHUB_OWNER").Default("syncthing").String()
 	githubToken := kingpin.Flag("github-token", "GitHub oAuth2 token for own access").Envar("GITHUB_TOKEN").Required().String()
 	externalURL := kingpin.Flag("external-url", "Our external (root) URL").Envar("EXTERNAL_URL").Required().String()
+	debugRender := kingpin.Flag("debug-render", "Just fetch issues and render the index").Bool()
 	kingpin.Parse()
+
+	if *debugRender {
+		l := newCachedIssueList(*githubOwner, *githubRepo, *githubToken)
+		s := pageState{cachedIssueList: l}
+		indexTemplate.Execute(os.Stdout, s)
+		return
+	}
 
 	// The cookie store uses Gob for serialization, we register custom types
 	// beforehand so we can use them directly.
