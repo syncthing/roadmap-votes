@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Syncthing Roadmap Voting</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <style type="text/css">
+        .very-muted {
+            color: #aaa;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Roadmap Issues</h1>
+
+            <p>
+            {{if .Authenticated}}You are voting as {{.User}}. You can <a href="/logout">log out</a>.
+            {{else}}You can <a href="/authenticate">authenticate with GitHub</a> to vote{{end}}
+            </p>
+
+            {{range .Issues}}
+            <div class="row">
+                <div class="col-2 col-md-1 text-right">
+                    {{if $.Authenticated}}
+                        {{if $.UserHasVoted .GetNumber $.User}}
+                            <a href="/unvote/{{.Number}}">{{$.Votes .Number}}&nbsp;<span class="text-success">&#x25B2;</span></a>
+                        {{else}}
+                            <a href="/vote/{{.Number}}">{{$.Votes .Number}}&nbsp;<span class="very-muted">&#x25B2;</span></a>
+                        {{end}}
+                    {{else}}
+                        {{$.Votes .Number}}&nbsp;<span class="very-muted">&#x25B2;</span>
+                    {{end}}
+                </div>
+                <div class="col-2 col-md-1 text-right">
+                    <a href="{{.HTMLURL}}"><span class="issue-number text-muted">#{{.Number}}</span></a>
+                </div>
+                <div class="col">
+                    <span class="title">{{.Title}}</span>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </body>
+</html>
