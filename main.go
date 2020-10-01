@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -191,7 +192,7 @@ func (s *server) vote(w http.ResponseWriter, r *http.Request) {
 	log.Printf("User %s voted for issue %d: %v", user.GetLogin(), issue, err)
 	s.issues.flushVotes(issue)
 
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, fmt.Sprintf("/#issue-%d", issue), http.StatusTemporaryRedirect)
 }
 
 // unvote removes a vote to an issue for the logged in user.
@@ -220,7 +221,7 @@ func (s *server) unvote(w http.ResponseWriter, r *http.Request) {
 	log.Printf("User %s removed vote for issue %d: %v", user.GetLogin(), issue, err)
 	s.issues.flushVotes(issue)
 
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, fmt.Sprintf("/#issue-%d", issue), http.StatusTemporaryRedirect)
 }
 
 // logout removes the user session, thus logging them out

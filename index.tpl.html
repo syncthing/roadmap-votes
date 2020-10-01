@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <style type="text/css">
         .very-muted {
-            color: #aaa;
+            color: #ccc;
         }
         </style>
     </head>
@@ -14,32 +14,48 @@
         <div class="container">
             <h1>Roadmap Issues</h1>
 
-            <p>
-            {{if .Authenticated}}You are voting as {{.User}}. You can <a href="/logout">log out</a>.
-            {{else}}You can <a href="/authenticate">authenticate with GitHub</a> to vote{{end}}
-            </p>
+            {{if .Authenticated}}
+                <p>
+                    You are voting as {{.User}}. You can <a href="/logout">log out</a>.
+                </p>
+            {{else}}
+                <p>
+                    You can <a href="/authenticate">authenticate with
+                    GitHub</a> to vote. (We will request "user profile" and
+                    "public repositories" access scope because that's the
+                    minimum to be able to post votes.) You can also vote
+                    directly on GitHub using the 👍 reaction, though it'll
+                    take about an hour to reflect here.
+                </p>
+            {{end}}
 
+            <hr>
             {{range .Issues}}
-            <div class="row">
-                <div class="col-2 col-md-1 text-right"><h4>
+            <div class="row" id="issue-{{.Number}}">
+                <div class="col-2 col-md-1 text-center"><h4>
                     {{if $.Authenticated}}
                         {{if $.UserHasVoted .GetNumber $.User}}
-                            <a href="/unvote/{{.Number}}">{{$.Votes .Number}}&nbsp;<span class="text-success">&#x25B2;</span></a>
+                            <a href="/unvote/{{.Number}}">
+                                <span class="text-success">&#x25B2;</span><br>
+                                <span class="text-success"><b>{{$.Votes .Number}}</b></span>
+                            </a>
                         {{else}}
-                            <a href="/vote/{{.Number}}">{{$.Votes .Number}}&nbsp;<span class="very-muted">&#x25B2;</span></a>
+                            <a href="/vote/{{.Number}}">
+                                <span class="very-muted">&#x25B2;</span><br>
+                                <span class="text-muted">{{$.Votes .Number}}</span>
+                            </a>
                         {{end}}
                     {{else}}
-                        {{$.Votes .Number}}&nbsp;<span class="very-muted">&#x25B2;</span>
+                        <span class="very-muted">&#x25B2;</span><br>
+                        {{$.Votes .Number}}
                     {{end}}
                 </h4></div>
-                <div class="col-2 col-md-1 text-right"><h4>
-                    <a href="{{.HTMLURL}}"><span class="issue-number text-muted">#{{.Number}}</span></a>
-                </h4></div>
                 <div class="col">
-                    <h4>{{.Title}}</h4>
+                    <h4>{{.Title}} <span class="text-muted">(<a class="text-muted" href="{{.HTMLURL}}">#{{.Number}}</a>)</span></h4>
                     {{$.RenderBody .}}
                 </div>
             </div>
+            <hr>
             {{end}}
         </div>
     </body>
