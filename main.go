@@ -30,7 +30,9 @@ const (
 	sessionUserKey    = "user"
 )
 
-var indexTemplate = template.Must(template.New("index.tpl.html").ParseFiles("index.tpl.html"))
+var indexTemplate = template.Must(template.New("index.tpl.html").Funcs(template.FuncMap{
+	"add": func(a, b int) int { return a + b },
+}).ParseFiles("index.tpl.html"))
 
 func main() {
 	listenAddress := kingpin.Flag("listen-address", "Address to listen on").Envar("LISTEN_ADDRESS").Default("127.0.0.1:8629").String()

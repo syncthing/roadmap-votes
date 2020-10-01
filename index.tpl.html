@@ -30,29 +30,30 @@
             {{end}}
 
             <hr>
-            {{range .Issues}}
-            <div class="row" id="issue-{{.Number}}">
-                <div class="col-2 col-md-1 text-center"><h4>
+            {{range $i, $issue := .Issues}}
+            <div class="row d-flex align-items-center" id="issue-{{$issue.Number}}">
+                <div class="col-2 col-md-1 text-center"><h1 class="very-muted display-4">{{add 1 $i}}</h1></div>
+                <div class="col-2 col-md-1 text-center"><h2>
                     {{if $.Authenticated}}
-                        {{if $.UserHasVoted .GetNumber $.User}}
-                            <a href="/unvote/{{.Number}}">
+                        {{if $.UserHasVoted $issue.GetNumber $.User}}
+                            <a href="/unvote/{{$issue.Number}}">
                                 <span class="text-success">&#x25B2;</span><br>
-                                <span class="text-success"><b>{{$.Votes .Number}}</b></span>
+                                <span class="text-success"><b>{{$.Votes $issue.Number}}</b></span>
                             </a>
                         {{else}}
-                            <a href="/vote/{{.Number}}">
+                            <a href="/vote/{{$issue.Number}}">
                                 <span class="very-muted">&#x25B2;</span><br>
-                                <span class="text-muted">{{$.Votes .Number}}</span>
+                                <span class="text-muted">{{$.Votes $issue.Number}}</span>
                             </a>
                         {{end}}
                     {{else}}
                         <span class="very-muted">&#x25B2;</span><br>
-                        {{$.Votes .Number}}
+                        {{$.Votes $issue.Number}}
                     {{end}}
-                </h4></div>
+                </h2></div>
                 <div class="col">
-                    <h4>{{.Title}} <span class="text-muted">(<a class="text-muted" href="{{.HTMLURL}}">#{{.Number}}</a>)</span></h4>
-                    {{$.RenderBody .}}
+                    <h4>{{$issue.Title}} <span class="text-muted">(<a class="text-muted" href="{{$issue.HTMLURL}}">#{{$issue.Number}}</a>)</span></h4>
+                    {{$.RenderBody $issue}}
                 </div>
             </div>
             <hr>
