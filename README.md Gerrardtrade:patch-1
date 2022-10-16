@@ -1,0 +1,803 @@
+# roadmap-votes
+gh repo clone syncthing/roadmap-votes
+gh repo clone syncthing/roadmap-votesSkip to main content
+
+Backendless Support
+
+Release Crash in Android
+
+Flutter
+
+Support Topics
+
+Knowledge Base
+
+Documentation
+
+Log In
+
+Backendless has many team members that live and work in Ukraine 🇺🇦
+
+If you're as appalled by Russia's abhorrent attack as we are, please support Ukraine and its people.
+
+Release Crash in Android
+
+Flutter
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+1
+
+May 6
+
+My RELEASED version of the app crashes when initialize with Backendless and without initializing works fine. I don’t use proguard.
+
+This is Google play crash report:
+
+ATAL EXCEPTION: main
+
+Process: com.foroodja.retailers, PID: 18830
+
+java.lang.ExceptionInInitializerError
+
+	at b.a.e0.m(Unknown Source:0)
+
+	at b.a.e.<clinit>(Unknown Source:15)
+
+	at b.a.e.r(Unknown Source:0)
+
+	at b.a.i0.b.a.f(Unknown Source:8)
+
+	at b.a.i0.b.a.M(Unknown Source:86)
+
+	at d.a.c.a.j$a.a(Unknown Source:17)
+
+	at io.flutter.embedding.engine.f.b.e(Unknown Source:49)
+
+	at io.flutter.embedding.engine.FlutterJNI.handlePlatformMessage(Unknown Source:4)
+
+	at android.os.MessageQueue.nativePollOnce(Native Method)
+
+	at android.os.MessageQueue.next(MessageQueue.java:326)
+
+	at android.os.Looper.loop(Looper.java:160)
+
+	at android.app.ActivityThread.main(ActivityThread.java:6718)
+
+	at java.lang.reflect.Method.invoke(Native Method)
+
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
+
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:858)
+
+Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'e.k.e e.d.f.g()' on a null object reference
+
+	at e.k.e.i(Unknown Source:4)
+
+	at b.a.e0.<init>(Unknown Source:7)
+
+	at b.a.e0.<clinit>(Unknown Source:16)
+
+Screenshot 2022-05-07 at 08.32.53
+
+Screenshot 2022-05-07 at 08.32.53
+
+1856×820 181 KB
+
+Screenshot 2022-05-07 at 08.34.52
+
+Screenshot 2022-05-07 at 08.34.52
+
+1856×820 166 KB
+
+Thank you very much. It is working now. Please add this to your documents.
+
+created
+
+May 6
+
+last reply
+
+May 9
+
+20
+
+replies
+
+361
+
+views
+
+2
+
+users
+
+2
+
+likes
+
+1110
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+1
+
+May 7
+
+I moved the initialization to different pages. On any page, the app wants to initialize it crashes.
+
+I updated the flutter, any packages in my project, and Backendless to 7.2.3. And also tried any solution on the internet I could find.
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 7
+
+I even made a balnc project with flutter just put backendless package and initialize it, then build apk and it crashes. Removed the initialization works.
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+Hello, @Ehsan_Nikaeen1.
+
+Try to call initApp first, and only after that setUrl.
+
+Best Regards, Nikita.
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+I did even better, I didn’t call setUrl. and it crashes again!
+
+Screenshot 2022-05-09 093952
+
+Screenshot 2022-05-09 093952
+
+1920×936 123 KB
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+One moment. I will check
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+@Ehsan_Nikaeen1, I don’t have any problems.
+
+You need to call setUrl if your app is on EU server. It just needs to be done after initApp.
+
+Debug version is work as expected for you?
+
+What version of backnedless_sdk are you using?
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+Yes, I was working fine all way and when I published it to google play I realized it crashes. It wasted two weeks of my time now, I delete every package from the app until getting to backendless. I use 7.2.3 version.
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+No difference!
+
+Screenshot 2022-05-09 102400
+
+Screenshot 2022-05-09 102400
+
+1247×890 95.3 KB
+
+2 Replies
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+No difference:
+
+ void initBackend() async {
+
+    await Backendless.initApp(
+
+        applicationId: Constants.APPLICATION_ID,
+
+        androidApiKey: Constants.ANDROID_API_KEY,
+
+        iosApiKey: Constants.IOS_API_KEY);
+
+if ((await Backendless.isInitialized())!) {
+
+  Backendless.setUrl("https://eu-api.backendless.com");
+
+    }
+
+  }
+
+Nikita Fedorishchev
+
+Backendless Team
+
+Ehsan Nikaeen
+
+May 9
+
+I can assume that something is wrong with the gradle, manifest or proguard settings.
+
+Right now we have a BackendlessViewer app on the public google play and appstore that uses the backendless_sdk. Here is it build.gradle settings:
+
+def localProperties = new Properties()
+
+def localPropertiesFile = rootProject.file('local.properties')
+
+if (localPropertiesFile.exists()) {
+
+    localPropertiesFile.withReader('UTF-8') { reader ->
+
+        localProperties.load(reader)
+
+    }
+
+}
+
+def keystoreProperties = new Properties()
+
+def keystorePropertiesFile = rootProject.file('app/key.properties')
+
+if (keystorePropertiesFile.exists()) {
+
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+
+if (flutterRoot == null) {
+
+    throw GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+
+if (flutterVersionCode == null) {
+
+    flutterVersionCode = '6'
+
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+
+if (flutterVersionName == null) {
+
+    flutterVersionName = '1.2.0'
+
+}
+
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+
+    compileSdkVersion 31
+
+    sourceSets {
+
+        main.java.srcDirs += 'src/main/kotlin'
+
+    }
+
+    lintOptions {
+
+        disable 'InvalidPackage'
+
+        checkReleaseBuilds false //<- add this line
+
+    }
+
+    defaultConfig {
+
+        applicationId "com.backendless.backendlessViewer"
+
+        minSdkVersion 23
+
+        targetSdkVersion 31
+
+        versionCode flutterVersionCode.toInteger()
+
+        versionName flutterVersionName
+
+        multiDexEnabled = true
+
+    }
+
+    signingConfigs {
+
+        release {
+
+            keyAlias keystoreProperties['keyAlias']
+
+            keyPassword keystoreProperties['keyPassword']
+
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+
+            storePassword keystoreProperties['storePassword']
+
+        }
+
+    }
+
+    buildTypes {
+
+        release {
+
+            signingConfig signingConfigs.release
+
+            minifyEnabled true
+
+            multiDexEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+
+    }
+
+}
+
+flutter {
+
+    source '../..'
+
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.google.firebase:firebase-core:20.0.0'
+
+}
+
+Try redesigning your gradle to match the above as closely as possible.
+
+2 Replies
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+My gradle file is like this: Standard one didn’t change anything.
+
+def localProperties = new Properties()
+
+def localPropertiesFile = rootProject.file('local.properties')
+
+if (localPropertiesFile.exists()) {
+
+    localPropertiesFile.withReader('UTF-8') { reader ->
+
+        localProperties.load(reader)
+
+    }
+
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+
+if (flutterRoot == null) {
+
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+
+if (flutterVersionCode == null) {
+
+    flutterVersionCode = '1'
+
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+
+if (flutterVersionName == null) {
+
+    flutterVersionName = '1.0'
+
+}
+
+apply plugin: 'com.android.application'
+
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+def keystoreProperties = new Properties()
+
+def keystorePropertiesFile = rootProject.file('key.properties')
+
+if (keystorePropertiesFile.exists()) {
+
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+}
+
+android {
+
+    compileSdkVersion 30
+
+    compileOptions {
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+
+        targetCompatibility JavaVersion.VERSION_1_8
+
+    }
+
+    defaultConfig {
+
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+
+        applicationId "com.foroodja.retailers"
+
+        minSdkVersion 20
+
+        targetSdkVersion 30
+
+        multiDexEnabled = true
+
+        versionCode flutterVersionCode.toInteger()
+
+        versionName flutterVersionName
+
+    }
+
+    signingConfigs {
+
+        release {
+
+            keyAlias keystoreProperties['keyAlias']
+
+            keyPassword keystoreProperties['keyPassword']
+
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+
+            storePassword keystoreProperties['storePassword']
+
+        }
+
+    }
+
+    buildTypes {
+
+        release {
+
+            signingConfig signingConfigs.release
+
+        }
+
+    }
+
+}
+
+dependencies {
+
+    implementation("androidx.multidex:multidex:2.0.1")
+
+}
+
+flutter {
+
+    source '../..'
+
+}
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+        signingConfig signingConfigs.release            
+
+        minifyEnabled true
+
+        multiDexEnabled true
+
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+add this to
+
+     buildTypes{
+
+         release{
+
+       
+
+     }
+
+}
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+minifyEnabled true
+
+            multiDexEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+Do I need to edit “proguard-android.txt”?
+
+2 Replies
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+nope
+
+1 Reply
+
+Nikita Fedorishchev
+
+Backendless Team
+
+Ehsan Nikaeen
+
+May 9
+
+also I don’t see proguard-rules.pro file in your
+
+android -> app folder.
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+Nikita Fedorishchev
+
+May 9
+
+Not working.
+
+I saw something in your previous tickets about editing proguard, Are you sure?
+
+Screenshot 2022-05-09 104528
+
+Screenshot 2022-05-09 104528
+
+1622×898 97.6 KB
+
+2 Replies
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+proguard-rules.pro should look like this:
+
+#Flutter Wrapper
+
+-keep class io.flutter.app.** { *; }
+
+-keep class io.flutter.plugin.**  { *; }
+
+-keep class io.flutter.util.**  { *; }
+
+-keep class io.flutter.view.**  { *; }
+
+-keep class io.flutter.**  { *; }
+
+-keep class io.flutter.plugins.**  { *; }
+
+#Backendless
+
+-dontwarn com.backendless.**
+
+-dontwarn weborb.**
+
+-keep class weborb.** {*;}
+
+-keep class com.backendless.** {*;}
+
+1 Reply
+
+Nikita Fedorishchev
+
+Backendless Team
+
+Ehsan Nikaeen
+
+May 9
+
+You don’t need add proguard-android.txt to project. But need proguard-rules.pro here:
+
+Screenshot 2022-05-09 at 12.47.57
+
+Screenshot 2022-05-09 at 12.47.57
+
+700×326 17.1 KB
+
+Ehsan Nikaeen
+
+Ehsan_Nikaeen1
+
+May 9
+
+proguard-rules.pro
+
+Thank you very much. It is working now.
+
+Please add this to your documents.
+
+1 Reply
+
+1
+
+Solution
+
+Nikita Fedorishchev
+
+Backendless Team
+
+May 9
+
+Ok, great. Happy Codding:)
+
+1
+
+Reply
+
+Backendless
+
+Visual app development platform that makes apps intuitive to build and easy to manage, no code required.
+
+Features
+
+Backendless Core
+
+UI Builder
+
+API Services
+
+Backend Management
+
+Backendless PRO
+
+Marketplace
+
+Development
+
+UI Builder
+
+Codeless
+
+JavaScript
+
+Android
+
+iOS
+
+Flutter
+
+Integrations
+
+WIX
+
+Adalo
+
+Bubble.io
+
+Thunkable
+
+AppGyver
+
+Zapier
+
+Business
+
+Customers
+
+App Gallery
+
+Partners
+
+Pricing
+
+Community
+
+Developers Directory
+
+Our Team
+
+Telegram Chat
+
+Privacy Terms of service About
+
+
+
+    
+
+ATAL EXCEPTION: main
+
+Process: com.foroodja.retailers, PID: 18830
+
+java.lang.ExceptionInInitializerError
+
+	at b.a.e0.m(Unknown Source:0)
+
+	at b.a.e.<clinit>(Unknown Source:15)
+
+	at b.a.e.r(Unknown Source:0)
+
+	at b.a.i0.b.a.f(Unknown Source:8)
+
+	at b.a.i0.b.a.M(Unknown Source:86)
+
+	at d.a.c.a.j$a.a(Unknown Source:17)
+
+	at io.flutter.embedding.engine.f.b.e(Unknown Source:49)
+
+	at io.flutter.embedding.engine.FlutterJNI.handlePlatformMessage(Unknown Source:4)
+
+	at android.os.MessageQueue.nativePollOnce(Native Method)
+
+	at android.os.MessageQueue.next(MessageQueue.java:326)
+
+	at android.os.Looper.loop(Looper.java:160)
+
+	at android.app.ActivityThread.main(ActivityThread.java:6718)
+
+	at java.lang.reflect.Method.invoke(Native Method)
+
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
+
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:858)
+
+Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'e.k.e e.d.f.g()' on a null object reference
+
+	at e.k.e.i(Unknown Source:4)
+
+	at b.a.e0.<init>(Unknown Source:7)
+
+	at b.a.e0.<clinit>(Unknown Source:16)
+
+  
